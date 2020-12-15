@@ -1,6 +1,6 @@
-import { forwardRef } from "react";
-import { CANVAS } from "../utils/config";
-import "./Canvas.scss";
+import { forwardRef } from 'react';
+import { CANVAS } from '../utils/config';
+import './Canvas.scss';
 
 const Canvas = forwardRef<HTMLCanvasElement>((props, ref) => (
   <div className="canvas-container">

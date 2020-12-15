@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import "./ActionBar.scss";
+import { useEffect, useRef, useState } from 'react';
+import './ActionBar.scss';
 
 const ActionBar: React.FC<{
-  audioCtxState: "closed" | "running" | "suspended" | undefined;
+  audioCtxState: 'closed' | 'running' | 'suspended' | undefined;
   audioStarted: boolean;
   arrayBuffer: ArrayBuffer | null;
   setArrayBuffer: React.Dispatch<React.SetStateAction<ArrayBuffer | null>>;
@@ -17,13 +17,13 @@ const ActionBar: React.FC<{
   const InputRef = useRef<HTMLInputElement>(null);
   const fileReaderRef = useRef<FileReader>(new FileReader());
   const [file, setFile] = useState<File | null>(null);
-  const [playButtonText, setPlayButtonText] = useState<string>("");
+  const [playButtonText, setPlayButtonText] = useState<string>('');
 
   useEffect(() => {
-    if (!audioStarted || (audioStarted && audioCtxState === "suspended")) {
-      setPlayButtonText("播放");
-    } else if (audioCtxState === "running") {
-      setPlayButtonText("暂停");
+    if (!audioStarted || (audioStarted && audioCtxState === 'suspended')) {
+      setPlayButtonText('播放');
+    } else if (audioCtxState === 'running') {
+      setPlayButtonText('暂停');
     }
   }, [audioCtxState, audioStarted]);
 
@@ -42,10 +42,10 @@ const ActionBar: React.FC<{
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.length) {
       const newFile = e.target.files[0];
-      if (!newFile.type.startsWith("audio")) {
-        alert("请上传音频文件");
+      if (!newFile.type.startsWith('audio')) {
+        alert('请上传音频文件');
       } else {
-        console.log("音频文件：", newFile);
+        console.log('音频文件：', newFile);
         setFile(newFile);
       }
     }
@@ -66,7 +66,7 @@ const ActionBar: React.FC<{
         accept="audio/*"
         onChange={handleInputChange}
         ref={InputRef}
-        style={{ display: "none" }}
+        style={{ display: 'none' }}
       />
       <button onClick={() => InputRef.current?.click()}>选择音乐</button>
       {arrayBuffer && (
