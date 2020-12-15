@@ -1,21 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import "./UploadBar.scss";
+import "./ActionBar.scss";
 
-export default function UploadBar() {
+const ActionBar: React.FC<{
+  arrayBuffer: ArrayBuffer | null;
+  setArrayBuffer: React.Dispatch<React.SetStateAction<ArrayBuffer | null>>;
+  playAudio: () => void;
+}> = ({ arrayBuffer, setArrayBuffer, playAudio }) => {
   const InputRef = useRef<HTMLInputElement>(null);
   const fileReaderRef = useRef<FileReader>(new FileReader());
   const [file, setFile] = useState<File | null>(null);
-  const [arrayBuffer, setArrayBuffer] = useState<ArrayBuffer | null>(null);
 
   useEffect(() => {
     fileReaderRef.current.onload = function () {
       // 将读取到的 File 转为 ArrayBuffer
       const result = fileReaderRef.current.result;
       if (result instanceof ArrayBuffer) {
+        console.log({ result });
         setArrayBuffer(result);
       }
     };
-  }, []);
+  }, [setArrayBuffer]);
 
   /** 处理文件上传 */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,20 +42,8 @@ export default function UploadBar() {
     fileReaderRef.current.readAsArrayBuffer(file);
   }, [file]);
 
-  // arrayBuffer 变化时
-  useEffect(() => {
-    if (arrayBuffer === null) {
-      return;
-    }
-    const audioCtx = new window.AudioContext();
-    const analyser = audioCtx.createAnalyser();
-    audioCtx.decodeAudioData(arrayBuffer).then((decodedData) => {
-      console.log({ decodedData });
-    });
-  }, [arrayBuffer])
-
   return (
-    <div className="upload-bar">
+    <div className="action-bar">
       <input
         type="file"
         accept="audio/*"
@@ -59,7 +51,10 @@ export default function UploadBar() {
         ref={InputRef}
         style={{ display: "none" }}
       />
-      <button onClick={() => InputRef.current?.click()}>点我</button>
+      <button onClick={() => InputRef.current?.click()}>选择音乐</button>
+      { arrayBuffer && <button onClick={() => playAudio()}>播放</button> }
     </div>
   );
-}
+};
+
+export default ActionBar;
