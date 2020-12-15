@@ -9,17 +9,31 @@ function App() {
   const [audioCtx, setAudioCtx] = useState<AudioContext | null>(null);
   const [source, setSource] = useState<AudioBufferSourceNode | null>(null);
   const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
+  const [audioStarted, setAudioStarted] = useState<boolean>(false);
+  const [audioCtxState, setAudioCtxState] = useState<"closed" | "running" | "suspended" | undefined>('running');
   // const audioCtxRef = useRef<AudioContext | null>(null);
   // const sourceRef = useRef<AudioBufferSourceNode | null>(null);
   // const analyserRef = useRef<AnalyserNode | null>(null);
 
-  const playAudio = () => {
+  const togglePlayStatus = () => {
     // const source = sourceRef.current;
-    if (!source) {
+    if (!source || !audioCtx) {
       alert('无法找到播放源！');
       return;
     }
-    source.start();
+    if (!audioStarted) {
+      setAudioStarted(true);
+      source.start();
+    } else {
+      if(audioCtx.state === 'running') {
+        setAudioCtxState('suspended');
+        audioCtx.suspend();
+      } else if(audioCtx.state === 'suspended') {
+        setAudioCtxState('running');
+        audioCtx.resume();
+      }
+    }
+    
   }
 
   
@@ -33,7 +47,6 @@ function App() {
     const bufferLength = analyser.fftSize;
     const dataArray = new Uint8Array(bufferLength);
     analyser.getByteTimeDomainData(dataArray);
-    console.log({ dataArray })
     ctx.fillStyle = "rgb(200, 200, 200)";
     ctx.fillRect(0, 0, CANVAS.WIDTH, CANVAS.HEIGHT);
     ctx.lineWidth = 2;
@@ -72,6 +85,7 @@ function App() {
     const analyserNode = audioContext.createAnalyser();
     const sourceNode = audioContext.createBufferSource();
     sourceNode.connect(analyserNode);
+    analyserNode.connect(audioContext.destination);
     audioContext.decodeAudioData(arrayBuffer).then((buffer) => {
       sourceNode.buffer = buffer;
       // audioCtxRef.current = audioContext;
@@ -80,6 +94,8 @@ function App() {
       setAudioCtx(audioContext);
       setAnalyser(analyserNode);
       setSource(sourceNode);
+      setAudioStarted(false);
+      setAudioCtxState('running');
     })
   }, [arrayBuffer, draw]);
 
@@ -87,9 +103,11 @@ function App() {
     <div className="App">
       <Canvas ref={canvasRef} />
       <ActionBar
+        audioCtxState={audioCtxState}
+        audioStarted={audioStarted}
         arrayBuffer={arrayBuffer}
         setArrayBuffer={setArrayBuffer}
-        playAudio={playAudio}
+        togglePlayStatus={togglePlayStatus}
       />
     </div>
   );

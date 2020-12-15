@@ -2,13 +2,31 @@ import { useEffect, useRef, useState } from "react";
 import "./ActionBar.scss";
 
 const ActionBar: React.FC<{
+  audioCtxState: "closed" | "running" | "suspended" | undefined;
+  audioStarted: boolean;
   arrayBuffer: ArrayBuffer | null;
   setArrayBuffer: React.Dispatch<React.SetStateAction<ArrayBuffer | null>>;
-  playAudio: () => void;
-}> = ({ arrayBuffer, setArrayBuffer, playAudio }) => {
+  togglePlayStatus: () => void;
+}> = ({
+  audioCtxState,
+  audioStarted,
+  arrayBuffer,
+  setArrayBuffer,
+  togglePlayStatus,
+}) => {
   const InputRef = useRef<HTMLInputElement>(null);
   const fileReaderRef = useRef<FileReader>(new FileReader());
   const [file, setFile] = useState<File | null>(null);
+  const [playButtonText, setPlayButtonText] = useState<string>("");
+
+  useEffect(() => {
+    console.log({ audioStarted, audioCtxState });
+    if (!audioStarted || (audioStarted && audioCtxState === "suspended")) {
+      setPlayButtonText("播放");
+    } else if (audioCtxState === "running") {
+      setPlayButtonText("暂停");
+    }
+  }, [audioCtxState, audioStarted]);
 
   useEffect(() => {
     fileReaderRef.current.onload = function () {
@@ -52,7 +70,9 @@ const ActionBar: React.FC<{
         style={{ display: "none" }}
       />
       <button onClick={() => InputRef.current?.click()}>选择音乐</button>
-      { arrayBuffer && <button onClick={() => playAudio()}>播放</button> }
+      {arrayBuffer && (
+        <button onClick={() => togglePlayStatus()}>{playButtonText}</button>
+      )}
     </div>
   );
 };
