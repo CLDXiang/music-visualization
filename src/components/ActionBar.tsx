@@ -20,7 +20,6 @@ const ActionBar: React.FC<{
   const [playButtonText, setPlayButtonText] = useState<string>("");
 
   useEffect(() => {
-    console.log({ audioStarted, audioCtxState });
     if (!audioStarted || (audioStarted && audioCtxState === "suspended")) {
       setPlayButtonText("播放");
     } else if (audioCtxState === "running") {
