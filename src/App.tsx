@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import './App.scss';
 import { ActionBar, Canvas } from './components';
-import { circleCoordinate, lineTo, lineFromTo } from './utils/canvas';
+import { circleCoordinate } from './utils/canvas';
 import { CANVAS, TIME, FREQ } from './utils/config';
 
 const { HEIGHT, WIDTH } = CANVAS;
@@ -116,28 +116,6 @@ function App() {
       );
     }
 
-    // ctx.lineCap = 'round';
-    // ctx.lineWidth = 3;
-    // ctx.strokeStyle = '#6699cc';
-
-    // ctx.beginPath();
-    // let sliceWidth = WIDTH / waveBufferRef.current.length;
-    // let x = 0;
-    // for (let i = 0; i < waveBufferRef.current.length; i++) {
-    //   const v = waveBufferRef.current[i] / 128;
-    //   const y = (v * HEIGHT) / 2;
-
-    //   if (i === 0) {
-    //     ctx.moveTo(x, y / 2);
-    //   } else {
-    //     ctx.lineTo(x, y / 2);
-    //   }
-
-    //   x += sliceWidth;
-    // }
-    // ctx.lineTo(WIDTH, HEIGHT / 4);
-    // ctx.stroke();
-
     // freq
     freqAnalyser.fftSize = FREQ_BUFFER_LENGTH;
     const freqDataArray = new Uint8Array(FREQ_BUFFER_LENGTH);
@@ -145,8 +123,8 @@ function App() {
 
     /** 画布中心 */
     ctx.lineCap = 'round';
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = '#ccccff';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#ccccff55';
 
     ctx.beginPath();
     /** 两个有效数据点的角度间隔 */
