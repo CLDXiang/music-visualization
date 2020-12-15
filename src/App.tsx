@@ -89,7 +89,7 @@ function App() {
       const rightHeightRadio = (Math.max(...slice, 128) - 128) / 128;
       const rightGrad = ctx.createLinearGradient(WIDTH / 2, 0, WIDTH / 2 * (1 + rightHeightRadio), 0);
       rightGrad.addColorStop(0, baseColor);
-      rightGrad.addColorStop(1, `rgb(${255 * rightHeightRadio}, 204, 255)`)
+      rightGrad.addColorStop(1, `rgb(${Math.floor(255 * rightHeightRadio)}, 204, 255)`)
       ctx.fillStyle = rightGrad;
       ctx.fillRect(WIDTH / 2, i * barWidth, WIDTH / 2 * rightHeightRadio, barWidth);
 
@@ -97,7 +97,7 @@ function App() {
       const leftHeightRadio = (128 - Math.min(...slice, 128)) / 128;
       const leftGrad = ctx.createLinearGradient(WIDTH / 2, 0, WIDTH / 2 * (1 - leftHeightRadio), 0);
       leftGrad.addColorStop(0, baseColor);
-      leftGrad.addColorStop(1, `rgb(${255 * leftHeightRadio}, 204, 255)`)
+      leftGrad.addColorStop(1, `rgb(${Math.floor(255 * leftHeightRadio)}, 204, 255)`)
       ctx.fillStyle = leftGrad;
       ctx.fillRect(WIDTH / 2 * (1 - leftHeightRadio), i * barWidth, WIDTH / 2 * leftHeightRadio, barWidth);
     }
