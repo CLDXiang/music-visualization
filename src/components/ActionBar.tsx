@@ -7,13 +7,7 @@ const ActionBar: React.FC<{
   arrayBuffer: ArrayBuffer | null;
   setArrayBuffer: React.Dispatch<React.SetStateAction<ArrayBuffer | null>>;
   togglePlayStatus: () => void;
-}> = ({
-  audioCtxState,
-  audioStarted,
-  arrayBuffer,
-  setArrayBuffer,
-  togglePlayStatus,
-}) => {
+}> = ({ audioCtxState, audioStarted, arrayBuffer, setArrayBuffer, togglePlayStatus }) => {
   const InputRef = useRef<HTMLInputElement>(null);
   const fileReaderRef = useRef<FileReader>(new FileReader());
   const [file, setFile] = useState<File | null>(null);
@@ -32,7 +26,6 @@ const ActionBar: React.FC<{
       // 将读取到的 File 转为 ArrayBuffer
       const result = fileReaderRef.current.result;
       if (result instanceof ArrayBuffer) {
-        console.log({ result });
         setArrayBuffer(result);
       }
     };
@@ -68,9 +61,19 @@ const ActionBar: React.FC<{
         ref={InputRef}
         style={{ display: 'none' }}
       />
-      <button onClick={() => InputRef.current?.click()}>选择音乐</button>
+      <button onClick={() => InputRef.current?.click()}>
+        <img className="icon" src="img/add.svg" alt="选择音乐" />
+        选择音乐
+      </button>
       {arrayBuffer && (
-        <button onClick={() => togglePlayStatus()}>{playButtonText}</button>
+        <button onClick={() => togglePlayStatus()}>
+          {playButtonText === '播放' ? (
+            <img className="icon" src="img/play.svg" alt="播放" />
+          ) : (
+            <img className="icon" src="img/pause.svg" alt="暂停" />
+          )}
+          {playButtonText}
+        </button>
       )}
     </div>
   );

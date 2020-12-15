@@ -5,4 +5,24 @@
   justify-content: center;
   align-items: center;
   background: #282c34;
+
+  button {
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    background: #282c34;
+    color: #ccc;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+
+    margin: 0 10px;
+  }
+
+  .icon {
+    height: 28px;
+    width: 28px;
+  }
 }
