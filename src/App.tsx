@@ -8,10 +8,12 @@ const { HEIGHT, WIDTH } = CANVAS;
 const { WAVE_BUFFER_SIZE, TIME_BUFFER_LENGTH, TIME_MERGE_LENGTH } = TIME;
 const {
   FREQ_BUFFER_LENGTH,
-  CIRCLE_RADIUS_IN,
-  CIRCLE_RADIUS_OUT,
-  CIRCLE_WAVE_IN,
-  CIRCLE_WAVE_OUT,
+  CIRCLE_IN_RADIUS,
+  CIRCLE_IN_WAVE,
+  CIRCLE_IN_ROTATE,
+  CIRCLE_OUT_RADIUS,
+  CIRCLE_OUT_WAVE,
+  CIRCLE_OUT_ROTATE,
 } = FREQ;
 
 function App() {
@@ -132,6 +134,8 @@ function App() {
     freqAnalyser.fftSize = FREQ_BUFFER_LENGTH;
     const freqDataArray = new Uint8Array(FREQ_BUFFER_LENGTH);
     freqAnalyser.getByteFrequencyData(freqDataArray);
+    /** 时间戳， 用于频域旋转 */
+    const timeStamp = audioCtx?.currentTime || 0;
 
     /** 画布中心 */
     ctx.lineCap = 'round';
@@ -145,8 +149,8 @@ function App() {
 
     // 外圈
     for (let i = 0; i < FREQ_BUFFER_LENGTH / 2; i++) {
-      const radius = CIRCLE_RADIUS_OUT + (CIRCLE_WAVE_OUT * freqDataArray[i]) / 255;
-      let [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * i + 120);
+      const radius = CIRCLE_OUT_RADIUS + (CIRCLE_OUT_WAVE * freqDataArray[i]) / 255;
+      let [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * i + 120 + timeStamp * CIRCLE_OUT_ROTATE);
       if (i === 0) {
         ctx.moveTo(x, y);
         startPoint = [x, y];
@@ -154,20 +158,20 @@ function App() {
         ctx.lineTo(x, y);
       }
       // 间隔点
-      [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * (i + 0.4) + 120);
+      [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * (i + 0.4) + 120 + timeStamp * CIRCLE_OUT_ROTATE);
       ctx.lineTo(x, y);
       [x, y] = circleCoordinate(
         WIDTH / 2,
         HEIGHT / 2,
-        CIRCLE_RADIUS_OUT,
-        angleStep * (i + 0.6) + 120
+        CIRCLE_OUT_RADIUS,
+        angleStep * (i + 0.6) + 120 + timeStamp * CIRCLE_OUT_ROTATE
       );
       ctx.lineTo(x, y);
       [x, y] = circleCoordinate(
         WIDTH / 2,
         HEIGHT / 2,
-        CIRCLE_RADIUS_OUT,
-        angleStep * (i + 0.8) + 120
+        CIRCLE_OUT_RADIUS,
+        angleStep * (i + 0.8) + 120 + timeStamp * CIRCLE_OUT_ROTATE
       );
       ctx.lineTo(x, y);
     }
@@ -175,8 +179,8 @@ function App() {
 
     // 内圈
     for (let i = 0; i < FREQ_BUFFER_LENGTH / 2; i++) {
-      const radius = CIRCLE_RADIUS_IN - (CIRCLE_WAVE_IN * freqDataArray[i]) / 255;
-      let [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * i + 120);
+      const radius = CIRCLE_IN_RADIUS - (CIRCLE_IN_WAVE * freqDataArray[i]) / 255;
+      let [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * i + 120 + timeStamp * CIRCLE_IN_ROTATE);
       if (i === 0) {
         ctx.moveTo(x, y);
         startPoint = [x, y];
@@ -184,20 +188,20 @@ function App() {
         ctx.lineTo(x, y);
       }
       // 间隔点
-      [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * (i + 0.4) + 120);
+      [x, y] = circleCoordinate(WIDTH / 2, HEIGHT / 2, radius, angleStep * (i + 0.4) + 120 + timeStamp * CIRCLE_IN_ROTATE);
       ctx.lineTo(x, y);
       [x, y] = circleCoordinate(
         WIDTH / 2,
         HEIGHT / 2,
-        CIRCLE_RADIUS_IN,
-        angleStep * (i + 0.6) + 120
+        CIRCLE_IN_RADIUS,
+        angleStep * (i + 0.6) + 120 + timeStamp * CIRCLE_IN_ROTATE
       );
       ctx.lineTo(x, y);
       [x, y] = circleCoordinate(
         WIDTH / 2,
         HEIGHT / 2,
-        CIRCLE_RADIUS_IN,
-        angleStep * (i + 0.8) + 120
+        CIRCLE_IN_RADIUS,
+        angleStep * (i + 0.8) + 120 + timeStamp * CIRCLE_IN_ROTATE
       );
       ctx.lineTo(x, y);
     }
@@ -205,7 +209,7 @@ function App() {
 
     ctx.stroke();
     animationFrameFlag.current = requestAnimationFrame(draw);
-  }, [timeAnalyser, freqAnalyser]);
+  }, [audioCtx, timeAnalyser, freqAnalyser]);
 
   // useEffect(() => {
   //   if (audioCtx) {

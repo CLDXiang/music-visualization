@@ -20,12 +20,16 @@ export const TIME = {
 export const FREQ = {
   /** 单帧数据项数，也是 FFT size */
   FREQ_BUFFER_LENGTH: 64,
-  /** 外圆的基本半径 */
-  CIRCLE_RADIUS_OUT: 100,
   /** 内圆的基本半径 */
-  CIRCLE_RADIUS_IN: 95,
-  /** 圆的凸起范围 */
-  CIRCLE_WAVE_OUT: 20,
-  /** 圆的下凹范围 */
-  CIRCLE_WAVE_IN: 15,
+  CIRCLE_IN_RADIUS: 95,
+  /** 内圆的下凹范围 */
+  CIRCLE_IN_WAVE: 15,
+  /** 内圆的旋转速度 */
+  CIRCLE_IN_ROTATE: 20,
+  /** 外圆的基本半径 */
+  CIRCLE_OUT_RADIUS: 100,
+  /** 外圆的凸起范围 */
+  CIRCLE_OUT_WAVE: 20,
+  /** 外圆的旋转速度 */
+  CIRCLE_OUT_ROTATE: -10,
 }

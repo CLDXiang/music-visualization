@@ -5,7 +5,7 @@
  * @param angle: 极角
  */
 export const circleCoordinate = (centerX: number, centerY: number, radius: number, angle: number) => {
-  const parsedAngle = angle * Math.PI / 180;
+  const parsedAngle = (angle % 360) * Math.PI / 180;
   return [centerX + Math.cos(parsedAngle) * radius, centerY + Math.sin(parsedAngle) * radius]
 }
 
