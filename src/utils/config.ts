@@ -4,6 +4,8 @@ export const CANVAS = {
   WIDTH: 300,
   /** 画布高度 */
   HEIGHT: 500,
+  /** 背景色 */
+  BACKGROUND: '#000',
 }
 
 /** 时域设置 */

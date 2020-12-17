@@ -4,7 +4,7 @@ import { ActionBar, Canvas } from './components';
 import { circleCoordinate } from './utils/canvas';
 import { CANVAS, TIME, FREQ } from './utils/config';
 
-const { HEIGHT, WIDTH } = CANVAS;
+const { HEIGHT, WIDTH, BACKGROUND } = CANVAS;
 const { WAVE_BUFFER_SIZE, TIME_BUFFER_LENGTH, TIME_MERGE_LENGTH } = TIME;
 const {
   FREQ_BUFFER_LENGTH,
@@ -63,7 +63,7 @@ function App() {
     }
 
     // 清屏
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = BACKGROUND;
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
     // 绘制时域图像，纵向条形图展示幅度
@@ -88,7 +88,7 @@ function App() {
       const slice = Array.from(
         waveBufferRef.current.slice(i * TIME_MERGE_LENGTH, (i + 1) * TIME_MERGE_LENGTH)
       );
-      const baseColor = '#000';
+      const baseColor = BACKGROUND;
 
       /** 右侧横条空间百分比 */
       const rightHeightRadio = (Math.max(...slice, 128) - 128) / 128;
@@ -101,7 +101,9 @@ function App() {
         0
       );
       rightGrad.addColorStop(0, baseColor);
-      rightGrad.addColorStop(1, `rgb(${Math.floor(255 * rightHeightRadio)}, 204, 255)`);
+      // rightGrad.addColorStop(1, `rgb(${Math.floor(255 * rightHeightRadio)}, 204, 255)`);
+      rightGrad.addColorStop(1, `rgb(${Math.floor(255 * rightHeightRadio)}, 166, 0)`);
+
       ctx.fillStyle = rightGrad;
 
       // 绘制
@@ -118,7 +120,8 @@ function App() {
         0
       );
       leftGrad.addColorStop(0, baseColor);
-      leftGrad.addColorStop(1, `rgb(${Math.floor(255 * leftHeightRadio)}, 204, 255)`);
+      // leftGrad.addColorStop(1, `rgb(${Math.floor(255 * leftHeightRadio)}, 204, 255)`);
+      leftGrad.addColorStop(1, `rgb(${Math.floor(255 * leftHeightRadio)}, 166, 0)`);
       ctx.fillStyle = leftGrad;
 
       // 绘制
@@ -252,7 +255,7 @@ function App() {
   }, [audioCtx, arrayBuffer, draw]);
 
   return (
-    <div className="App">
+    <div className="App" style={{ background: BACKGROUND }}>
       <Canvas ref={canvasRef} />
       <ActionBar
         audioCtxState={audioCtxState}
